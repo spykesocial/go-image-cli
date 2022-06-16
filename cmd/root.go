@@ -50,6 +50,6 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().StringP("url", "u", "", "The URL to read from")
+	rootCmd.Flags().StringP("url", "u", "", "The URL to get the image from")
 
 }
