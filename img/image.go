@@ -2,10 +2,14 @@
 	Copyright © 2022 Spyke Social Private Limited.
 
 */
-package image
+package img
 
 import (
 	"errors"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"net/http"
 	"os"
@@ -22,7 +26,6 @@ func getFile(URL string) (http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	// defer res.Body.Close()
 
 	// if there is an http error
 	if res.StatusCode != 200 {
@@ -30,6 +33,23 @@ func getFile(URL string) (http.Response, error) {
 	}
 
 	return res, nil
+}
+
+func GetImageConfig(URL string) (imgConfig image.Config, err error) {
+	res, err := getFile(URL)
+	defer res.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	// read image metadata to get image resolution
+	// Reference: https://www.admfactory.com/how-to-get-the-dimensions-of-an-image-in-golang/
+	imgConfig, _, err := image.DecodeConfig(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return imgConfig, nil
 }
 
 func SaveFile(URL, filename string) (err error) {
