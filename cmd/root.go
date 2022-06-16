@@ -7,9 +7,11 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spykesocial/go-image-cli/img"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -26,9 +28,15 @@ and print the dimensions of that image.
 	Run: func(cmd *cobra.Command, args []string) {
 		flagVal, err := cmd.Flags().GetString("url")
 		if err != nil {
-			fmt.Println("Need a URL to fetch image from")
+			log.Fatal("Need a URL to fetch image from")
 		}
-		fmt.Println("URL", flagVal)
+
+		config, err := img.GetImageConfig(flagVal)
+		if err != nil {
+			log.Fatal("Failed to download image from URL", err)
+		}
+		fmt.Println("Image width:", config.Width)
+		fmt.Println("Image Height:", config.Height)
 	},
 }
 
